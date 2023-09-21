@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\BattleNetController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,3 +16,5 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/login/battlenet', 'App\Http\Controllers\BattleNetController@redirectToProvider');
+Route::get('/login/battlenet/callback', 'App\Http\Controllers\BattleNetController@handleProviderCallback');

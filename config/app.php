@@ -159,7 +159,7 @@ return [
         /*
          * Package Service Providers...
          */
-
+        App\Providers\BattleNetServiceProvider::class,
         /*
          * Application Service Providers...
          */
