@@ -17,20 +17,19 @@ class BattleNetProvider extends AbstractProvider implements ProviderInterface
 
     protected function getAuthUrl($state)
     {
-        $url = 'https://us.battle.net/oauth/authorize';
+        $url = 'https://oauth.battle.net/oauth/authorize';
 
         return $this->buildAuthUrlFromBase($url, $state);
     }
 
     protected function getTokenUrl()
     {
-        return "https://us.battle.net/oauth/token";
+        return "https://oauth.battle.net/oauth/token";
     }
 
     protected function getUserByToken($token)
     {
-        $url = 'https://us.battle.net/oauth/userinfo';
-
+        $url = 'https://oauth.battle.net/oauth/userinfo';
         $response = $this->getHttpClient()->get($url, [
             RequestOptions::HEADERS => [
                 'Authorization' => 'Bearer ' . $token,
@@ -44,11 +43,8 @@ class BattleNetProvider extends AbstractProvider implements ProviderInterface
     {
         return (new User())->setRaw($user)->map([
             'id'       => $user['id'],
-            'nickname' => $user['battletag'],
-            'name'     => null,
-            'email'    => null,
-            'avatar'   => null,
+            'name' => $user['battletag'],
+            'sub' => $user['id'],
         ]);
     }
-
 }

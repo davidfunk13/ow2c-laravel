@@ -16,7 +16,6 @@ class BattleNetServiceProvider extends ServiceProvider
     private function registerBattleNetDriver()
     {
         Socialite::extend('battle_net', function ($app) {
-            dump($app['config']['services.battle_net']);
             $config = $app['config']['services.battle_net'];
 
             // Implement and return the custom Battle.net Socialite provider

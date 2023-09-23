@@ -16,5 +16,7 @@ use App\Http\Controllers\BattleNetController;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/login/battlenet', 'App\Http\Controllers\BattleNetController@redirectToProvider');
-Route::get('/login/battlenet/callback', 'App\Http\Controllers\BattleNetController@handleProviderCallback');
+
+
+Route::get('api/login/battlenet', 'App\Http\Controllers\BattleNetController@redirectToProvider');
+Route::get('api/login/battlenet/callback', 'App\Http\Controllers\BattleNetController@handleProviderCallback');
