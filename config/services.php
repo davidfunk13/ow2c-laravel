@@ -13,7 +13,6 @@ return [
     | a conventional file to locate the various service credentials.
     |
     */
-
     'battle_net' => [
         'client_id' => env('BATTLE_NET_CLIENT_ID'),
         'client_secret' => env('BATTLE_NET_CLIENT_SECRET'),

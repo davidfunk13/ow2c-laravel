@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->integer("sub")->unique();
-            $table->dropColumn('email');
-            $table->dropColumn('email_verified_at');
-            $table->dropColumn('password');
+              $table->dropUnique(['email']);
+              $table->string('email', 255)->nullable()->unique()->change();
+              $table->string('password')->nullable()->change();
+
         });
     }
 
@@ -26,9 +27,10 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('sub');
-            $table->string('email')->unique()->nullable();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->dropUnique(['email']);
+            $table->string('email')->unique()->nullable(false)->change();
+            $table->string('password')->nullable(false)->change();
+
         });
     }
 };

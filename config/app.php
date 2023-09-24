@@ -159,10 +159,11 @@ return [
         /*
          * Package Service Providers...
          */
-        App\Providers\BattleNetServiceProvider::class,
+
         /*
          * Application Service Providers...
          */
+        App\Providers\BattleNetServiceProvider::class,
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,

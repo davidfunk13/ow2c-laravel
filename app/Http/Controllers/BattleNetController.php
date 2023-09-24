@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Exception;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
@@ -23,14 +23,11 @@ class BattleNetController extends Controller
 
             $user = User::firstOrCreate(['sub' => $socialiteUser->attributes['sub']], ['name' => $socialiteUser->attributes['name']]);
 
-            $token = $user->createToken('access-token')->plainTextToken;
-
-            $cookie = Cookie::make('token', $token, 60, null, null, false, true); // 60 minutes expiration
-
+            Auth::login($user);
         } catch (Exception $e) {
             Log::error($e->getMessage());
         }
 
-        return redirect('http://localhost:5174/')->withCookie($cookie);
+        return redirect('http://localhost:3000/');
     }
 }

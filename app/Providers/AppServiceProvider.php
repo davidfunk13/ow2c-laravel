@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Laravel\Socialite\Facades\Socialite;
+use Laravel\Sanctum\Sanctum;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -12,10 +12,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        // Socialite::extend('battle_net', function ($app) {
-        //     return Socialite::buildProvider(BattleNetProvider::class, config('services.battle_net'));
-        // });
-            }
+    }
 
     /**
      * Bootstrap any application services.
