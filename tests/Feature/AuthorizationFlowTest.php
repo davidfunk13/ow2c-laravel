@@ -21,6 +21,11 @@ class AuthorizationFlowTest extends TestCase
      * @return void
      */
     use RefreshDatabase;
+
+    // put together a setup method, and test pieces of flow in isolation.
+    //flow compltes
+    //save to database and is logged in
+
     public function test_successful_oauth_flow()
     {
         // 1. Mock the HTTP call to Battle.net:
@@ -69,12 +74,14 @@ class AuthorizationFlowTest extends TestCase
         $response->assertRedirect('oauth.battle.net/oauth/authorize');
         $response = $this->get('/api/battlenet/callback?code=some_mocked_code');
         $response->assertRedirect('http://localhost:3000/');
+
         $this->assertDatabaseHas('users', [
             'sub' => '388652712',
             'name' => 'BathtubFarts#1297',
         ]);
 
         $authenticatedUser = User::where('sub', $mockedUser->attributes['sub'])->first();
+
         $this->assertAuthenticatedAs($authenticatedUser);
     }
 }
