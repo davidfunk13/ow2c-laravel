@@ -20,11 +20,10 @@ class BattleNetController extends Controller
     {
         try {
             $socialiteUser = Socialite::driver('battle_net')->user();
-
             $user = User::firstOrCreate(['sub' => $socialiteUser->attributes['sub']], ['name' => $socialiteUser->attributes['name']]);
-
             Auth::login($user);
         } catch (Exception $e) {
+            dd("nips", $e->getMessage());
             Log::error($e->getMessage());
         }
 
