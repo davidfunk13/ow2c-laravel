@@ -1,15 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Session\Store;
+namespace App\Http\Controllers\Session;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Session\SessionRequest;
 use App\Http\Requests\Session\StoreRequest;
 use App\Http\Resources\SessionResource;
 use App\Http\Traits\ServerErrorResponseTrait;
-use App\Models\Session;
 use App\Repositories\SessionRepository;
-use Illuminate\Http\Request;
 
 class StoreController extends Controller
 {

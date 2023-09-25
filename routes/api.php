@@ -2,7 +2,8 @@
 
 use App\Http\Controllers\BattleNetController;
 use App\Http\Controllers\LogoutController;
-use App\Http\Controllers\Session\Store\StoreController;
+use App\Http\Controllers\Session\StoreController;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,3 +26,9 @@ Route::middleware(['web', 'auth:web'])->get('/user', function (Request $request)
 Route::middleware(['web', 'auth:web'])->prefix('session')->group(function () {
     Route::post('/store', StoreController::class)->name('session.store');
 });
+
+Route::get('/unauthorized', function () {
+    return response()->json([
+        'message' => 'Unauthorized'
+    ], JsonResponse::HTTP_UNAUTHORIZED);
+})->name('unauthorized');

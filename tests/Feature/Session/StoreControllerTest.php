@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Session;
 
-use App\Http\Controllers\Session\Store\StoreController;
+use App\Http\Controllers\Session\StoreController;
 use App\Models\User;
 use App\Repositories\SessionRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
