@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\BattleNetController;
+use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\Session\Store\StoreController;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,18 +17,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::middleware(['web', 'auth:web'])->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::middleware('auth:sanctum')->post('/logout', function (Request $request) {
-    Auth::guard('web')->logout();   // Log the user out of the Laravel's session.
-
-    $request->session()->invalidate();  // Invalidate the session.
-    $request->session()->regenerateToken();  // Regenerate CSRF token.
-
-    return response()->json(['message' => 'Logged out']);
+//session routes
+Route::middleware(['web', 'auth:web'])->prefix('session')->group(function () {
+    Route::post('/store', StoreController::class)->name('session.store');
 });
-
-Route::get('battlenet/login', 'App\Http\Controllers\BattleNetController@redirectToProvider');
-Route::get('battlenet/callback', 'App\Http\Controllers\BattleNetController@handleProviderCallback');

@@ -5,9 +5,6 @@ namespace Tests\Feature;
 use App\Models\User;
 use Laravel\Socialite\Two\User as SocialiteUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Laravel\Socialite\Facades\Socialite;
 use Mockery;
@@ -21,14 +18,10 @@ class AuthorizationFlowTest extends TestCase
      * @return void
      */
     use RefreshDatabase;
-
-    // put together a setup method, and test pieces of flow in isolation.
-    //flow compltes
-    //save to database and is logged in
-
-    public function test_successful_oauth_flow()
+    protected function setUp(): void
     {
-        // 1. Mock the HTTP call to Battle.net:
+        parent::setUp();
+
         Http::fake([
             'battle.net/oauth/authorize' => Http::response([], 200),
             'battle.net/oauth/token' => Http::response([
@@ -43,9 +36,11 @@ class AuthorizationFlowTest extends TestCase
                 'battletag' => 'BathtubFarts#1297',
             ], 200),
         ]);
+    }
 
-
-        // 2. Mocking Socialite's BattleNetProvider
+    /** @test */
+    public function test_successful_oauth_flow_user_creation_and_authorization()
+    {
         $mockedUser = new SocialiteUser();
         $mockedUser->id = 388652712;
         $mockedUser->nickname = null;
@@ -69,11 +64,11 @@ class AuthorizationFlowTest extends TestCase
         $mockedProvider->shouldReceive('user')->andReturn($mockedUser);
         Socialite::shouldReceive('driver')->with('battle_net')->andReturn($mockedProvider);
 
-        // 3. Initiate the OAuth flow by visiting the appropriate route:
-        $response = $this->get('/api/battlenet/login');
+        // Initiate the OAuth flow
+        $response = $this->get('/battlenet/login');
         $response->assertRedirect('oauth.battle.net/oauth/authorize');
-        $response = $this->get('/api/battlenet/callback?code=some_mocked_code');
-        $response->assertRedirect('http://localhost:3000/');
+        $response = $this->get('/battlenet/callback?code=some_mocked_code');
+        $response->assertRedirect('http://localhost:3000/callback');
 
         $this->assertDatabaseHas('users', [
             'sub' => '388652712',

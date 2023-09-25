@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\BattleNetController;
+use App\Http\Controllers\LogoutController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +15,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::namespace('Battlenet')->prefix('battlenet')->group(function () {
+    Route::get('login', [BattleNetController::class, 'redirectToProvider'])->name('battlenet-provider-redirect');
+    Route::get('callback', [BattleNetController::class, 'handleProviderCallback'])->name('battlenet-provider-callback');
 });
+
+Route::middleware(['web', 'auth:web'])->post('/logout', LogoutController::class)->name('logout');

@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
 
 class BattleNetController extends Controller
@@ -16,17 +15,18 @@ class BattleNetController extends Controller
         return Socialite::driver('battle_net')->redirect();
     }
 
-    public function handleProviderCallback()
+    public function handleProviderCallback(Request $request)
     {
         try {
             $socialiteUser = Socialite::driver('battle_net')->user();
-            $user = User::firstOrCreate(['sub' => $socialiteUser->attributes['sub']], ['name' => $socialiteUser->attributes['name']]);
-            Auth::login($user);
-        } catch (Exception $e) {
-            dd("nips", $e->getMessage());
-            Log::error($e->getMessage());
-        }
 
-        return redirect('http://localhost:3000/');
+            $user = User::firstOrCreate(['sub' => $socialiteUser->attributes['sub']], ['name' => $socialiteUser->attributes['name']]);
+
+            Auth::login($user);
+
+            return redirect('http://localhost:3000/callback');
+        } catch (Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
     }
 }
