@@ -51,7 +51,6 @@ class StoreControllerTest extends TestCase
     }
 
     /** @test */
-    /** @test */
     public function it_returns_internal_server_error_when_an_exception_is_thrown()
     {
         // Mock the StoreController's __invoke method to throw an exception.

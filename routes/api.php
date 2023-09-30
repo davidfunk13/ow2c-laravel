@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\BattleNetController;
 use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\Session\DestroyController;
 use App\Http\Controllers\Session\StoreController;
+use App\Http\Controllers\Session\UpdateController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -25,7 +27,10 @@ Route::middleware(['web', 'auth:web'])->get('/user', function (Request $request)
 //session routes
 Route::middleware(['web', 'auth:web'])->prefix('session')->group(function () {
     Route::post('/store', StoreController::class)->name('session.store');
-    Route::post('/destroy', StoreController::class)->name('session.destroy');
+    Route::post('/destroy', DestroyController::class)->name('session.destroy');
+    Route::post('/update', UpdateController::class)->name('session.update');
+    // Route::post('/show', ShowController::class)->name('session.show');
+    // Route::post('/index', IndexController::class)->name('session.index');
 });
 
 Route::get('/unauthorized', function () {

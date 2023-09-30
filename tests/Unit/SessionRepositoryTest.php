@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Repositories;
+namespace Tests\Unit;
 
 use App\Http\Traits\ServerErrorResponseTrait;
 use App\Models\Session;

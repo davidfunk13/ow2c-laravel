@@ -1,14 +1,12 @@
 <?php
 
-namespace Tests\Unit\Repositories;
+namespace Tests\Unit;
 
 use App\Repositories\BaseRepository;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\Session;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Concerns\HasRelationships;
 use Illuminate\Support\Facades\Schema;
 use Tests\HasReflectiveTrait;
 
