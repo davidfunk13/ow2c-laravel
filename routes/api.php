@@ -25,6 +25,7 @@ Route::middleware(['web', 'auth:web'])->get('/user', function (Request $request)
 //session routes
 Route::middleware(['web', 'auth:web'])->prefix('session')->group(function () {
     Route::post('/store', StoreController::class)->name('session.store');
+    Route::post('/destroy', StoreController::class)->name('session.destroy');
 });
 
 Route::get('/unauthorized', function () {

@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Session;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class SessionFactory extends Factory
@@ -24,6 +25,7 @@ class SessionFactory extends Factory
     {
 
         return [
+            'user_id' => User::factory()->create()->id,
             'starting_rank' => $this->faker->randomElement($this->ranks),
             'rank' => $this->faker->randomElement($this->ranks),
             'starting_division' => $this->faker->numberBetween(1, 5),
