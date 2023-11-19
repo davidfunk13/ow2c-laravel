@@ -17,8 +17,20 @@ class OverwatchMap extends Model
         'area_3',
         'country',
     ];
+    public function gamesOnMapForCurrentUser()
+    {
+        return $this->games()
+            ->where('user_id', auth()->id())
+            ->get();
+    }
+
     public function game()
     {
         return $this->hasOne(Game::class);
+    }
+
+    public function games()
+    {
+        return $this->hasMany(Game::class, 'map_played_id');
     }
 }

@@ -38,6 +38,8 @@ class GameFactory extends Factory
         ->take(2)
         ->get();
 
+        // randomize game_mode
+        $gameMode = $this->faker->randomElement([0, 1]);
 
         // Determine round outcomes
         $roundOutcomes = [
@@ -60,6 +62,7 @@ class GameFactory extends Factory
             'hero_played' => $hero['name'],
             'user_id' => $this->userId,
             'game_role' => $hero['type'],
+            'game_mode' => $gameMode,
         ];
 
         // Include round outcomes only if they are not null

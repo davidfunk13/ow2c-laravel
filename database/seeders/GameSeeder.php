@@ -4,8 +4,6 @@ namespace Database\Seeders;
 use App\Models\Game;
 use Illuminate\Database\Seeder;
 use App\Models\User;
-use Database\Factories\GameFactory;
-use Illuminate\Support\Facades\Log;
 
 class GameSeeder extends Seeder
 {

@@ -39,8 +39,9 @@ class Game extends Model
     // Relationships
     public function map()
     {
-        return $this->belongsTo(OverwatchMap::class, 'map_played');
+        return $this->belongsTo(OverwatchMap::class, 'map_played_id', 'id');
     }
+
 
     public function user()
     {
@@ -66,7 +67,7 @@ class Game extends Model
             self::validateMapSections($currentMap, $game);
 
             // Validate the main hero
-            $mainHero = self::getHeroByName($heroes, $game->hero_played);
+            $mainHero = self::validateMainHeroName($heroes, $game->hero_played);
 
             // Validate additional heroes' types to match the main hero's type
             self::validateAdditionalHeroes($heroes, $game, $mainHero);
@@ -77,11 +78,30 @@ class Game extends Model
             // Update round wins and losses
             $game->updateRoundWinsAndLosses();
 
-            // Assign map ID by name
+            // Assign map relationships
             $game->assignMapIdByName($currentMap);
+            $game->assignMapNameById($currentMap);
         });
     }
 
+    public function getGameRoleAttribute($value)
+    {
+        switch ($value) {
+            case 0:
+                return 'Tank';
+            case 1:
+                return 'Damage';
+            case 2:
+                return 'Support';
+            default:
+                return 'Unknown'; // Handle any other values as needed
+        }
+    }
+
+    public function getGameModeAttribute($value)
+    {
+        return $value == 1 ? 'Competitive' : 'Quick Play';
+    }
     // Load maps data
     private static function loadMaps()
     {
@@ -100,7 +120,7 @@ class Game extends Model
         $currentMap = collect($maps)->firstWhere('name', $mapName);
 
         if (!$currentMap) {
-            throw new Exception("The selected map '{$mapName}' does not exist.");
+            throw new Exception("The selected map '{$mapName}' was not found.");
         }
 
         return $currentMap;
@@ -117,12 +137,12 @@ class Game extends Model
     }
 
     // Get hero by name
-    private static function getHeroByName($heroes, $heroName)
+    private static function validateMainHeroName($heroes, $heroName)
     {
         $hero = collect($heroes)->firstWhere('name', $heroName);
 
         if (!$hero) {
-            throw new Exception("The main hero '{$heroName}' does not exist.");
+            throw new Exception("The main hero '{$heroName}' was not found.");
         }
 
         return $hero;
@@ -134,7 +154,7 @@ class Game extends Model
         foreach (['additional_hero_played_1', 'additional_hero_played_2'] as $additionalHeroField) {
             $additionalHeroName = $game->$additionalHeroField;
             if ($additionalHeroName) {
-                $additionalHero = self::getHeroByName($heroes, $additionalHeroName);
+                $additionalHero = self::validateMainHeroName($heroes, $additionalHeroName);
                 if ($additionalHero['type'] !== $mainHero['type']) {
                     throw new Exception("The additional hero '{$additionalHeroName}' must be of type '{$mainHero['type']}' to match the main hero '{$game->hero_played}'.");
                 }
@@ -145,7 +165,7 @@ class Game extends Model
     // Set game type based on the map
     private static function setGameType($game, $currentMap)
     {
-        $game->game_type = $currentMap['type']; // Assuming the map data array has a 'type' field
+        $game->game_type = $currentMap['type'];
     }
 
     // Update round wins and losses based on round outcomes
@@ -165,18 +185,35 @@ class Game extends Model
         $this->round_wins = $wins;
         $this->round_losses = $losses;
     }
-
-    // Assign map ID by name
     public function assignMapIdByName($mapName)
     {
-        // Find the map with the given name
-        $map = OverwatchMap::where('name', $mapName)->first();
+        // Check if the map ID is already assigned
+        if (!$this->map_played_id) {
+            // Find the map with the given name
+            $map = OverwatchMap::where('name', $mapName)->first();
 
-        if (!$map) {
-            throw new Exception("The selected map '{$mapName}' does not exist.");
+            if (!$map) {
+                throw new Exception("The selected map '{$mapName}' was not found.");
+            }
+
+            // Assign the map ID to the game model
+            $this->map_played_id = $map->id;
         }
+    }
 
-        // Assign the map ID to the game model
-        $this->map_played_id = $map->id;
+    public function assignMapNameById($mapId)
+    {
+        // Check if the map name is already assigned
+        if (!$this->map_played) {
+            // Find the map by ID
+            $map = OverwatchMap::find($mapId);
+
+            if (!$map) {
+                throw new Exception("The selected map with ID '{$mapId}' was not found.");
+            }
+
+            // Assign the map name to the game model
+            $this->map_played = $map->name;
+        }
     }
 }
