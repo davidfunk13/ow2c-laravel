@@ -28,4 +28,13 @@ class StoreRequest extends FormRequest
             'additional_hero_played_2' => ['nullable', 'string', 'max:255', new AdditionalHeroValidationRule()],
         ];
     }
+    public function messages()
+    {
+        return [
+            'map_section_1.*' => 'The section is invalid for the selected map.',
+            'map_section_2.*' => 'The section is invalid for the selected map.',
+            'map_section_3.*' => 'The section is invalid for the selected map.',
+            'additional_hero_played_2.*' => 'The second additional hero is only accepted if the first additional hero is provided.',
+        ];
+    }
 }
