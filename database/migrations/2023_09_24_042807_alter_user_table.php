@@ -30,7 +30,6 @@ return new class extends Migration
             $table->dropUnique(['email']);
             $table->string('email')->unique()->nullable(false)->change();
             $table->string('password')->nullable(false)->change();
-
         });
     }
 };

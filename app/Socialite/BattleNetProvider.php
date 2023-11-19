@@ -35,12 +35,12 @@ class BattleNetProvider extends AbstractProvider implements ProviderInterface
                 'Authorization' => 'Bearer ' . $token,
             ],
         ]);
+
         return json_decode((string) $response->getBody(), true);
     }
 
     protected function mapUserToObject(array $user)
     {
-
         return (new User())->setRaw($user)->map([
             'id'       => $user['id'],
             'name' => $user['battletag'],

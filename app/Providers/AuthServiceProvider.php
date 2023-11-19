@@ -13,8 +13,9 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        //
+        Game::class => GamePolicy::class,
     ];
+
 
     /**
      * Register any authentication / authorization services.
