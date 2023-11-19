@@ -2,32 +2,30 @@
 
 namespace App\Http\Requests\Game;
 
+use AdditionalHeroValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use MapSectionsValidRule;
 
 class StoreRequest extends FormRequest
 {
-    // ...
-
     public function rules()
     {
-        // Load Overwatch maps and heroes data
-        $maps = require database_path('data/OverwatchMaps.php');
-        $mapNames = array_column($maps, 'name');
-
-        $heroes = require database_path('data/OverwatchHeroes.php');
-        $heroNames = array_column($heroes, 'name');
-
         return [
-            // 'user_id' => 'required|integer|exists:users,id',
+            'map_played_id' => 'required_without:map_played|exists:overwatch_maps,id',
             'result' => 'required|integer|in:0,1,2',
-            'map_played' => ['required', 'string', 'max:255', Rule::in($mapNames)],
-            'map_section_1' => 'nullable|string|max:255',
-            'map_section_2' => 'nullable|string|max:255',
-            'map_section_3' => 'nullable|string|max:255',
-            'hero_played' => ['required', 'string', 'max:255', Rule::in($heroNames)],
-            'additional_hero_played_1' => ['nullable', 'string', 'max:255', Rule::in($heroNames)],
-            'additional_hero_played_2' => ['nullable', 'string', 'max:255', Rule::in($heroNames)],
+            'map_played' => [
+                'required_without:map_played_id',
+                'string',
+                'max:255',
+                Rule::exists('overwatch_maps', 'name'),
+            ],
+            'map_section_1',
+            'map_section_2',
+            'map_section_3' => ['nullable', 'string', 'max:255', new MapSectionsValidRule()],
+            'hero_played' => ['required', 'string', 'max:255',  Rule::exists('overwatch_heroes', 'name')],
+            'additional_hero_played_1' => ['nullable', 'string', 'max:255', Rule::exists('overwatch_heroes', 'name')],
+            'additional_hero_played_2' => ['nullable', 'string', 'max:255', new AdditionalHeroValidationRule()],
         ];
     }
 }

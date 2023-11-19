@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Exception;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Auth;
 
 class Game extends Model
 {
@@ -81,23 +84,39 @@ class Game extends Model
             // Assign map relationships
             $game->assignMapIdByName($currentMap);
             $game->assignMapNameById($currentMap);
+
+            $game->assignLoggedInUserId();
         });
     }
 
-    public function getGameRoleAttribute($value)
+    // Get the result as a string
+    public function getResultAttribute($value)
     {
         switch ($value) {
-            case 0:
-                return 'Tank';
-            case 1:
-                return 'Damage';
-            case 2:
-                return 'Support';
+            case self::RESULT_WIN:
+                return 'Win';
+            case self::RESULT_LOSS:
+                return 'Loss';
+            case self::RESULT_DRAW:
+                return 'Draw';
             default:
-                return 'Unknown'; // Handle any other values as needed
+                throw new Exception("Invalid result '{$value}'");
+        }
+    }
+    // Assign userID FK
+    public function assignLoggedInUserId()
+    {
+        // Check if not running in console (as in, we're saving from a request, not from me running a command hitting a seeder), and not seeding
+        if (!App::runningInConsole() && !app()->bound('seeding')) {
+            $user = Auth::user();
+
+            if ($user) {
+                $this->user_id = $user->id;
+            }
         }
     }
 
+    // Get the game mode as a string
     public function getGameModeAttribute($value)
     {
         return $value == 1 ? 'Competitive' : 'Quick Play';
@@ -148,7 +167,7 @@ class Game extends Model
         return $hero;
     }
 
-    // Validate additional heroes
+    // Validate additional heroes columns
     private static function validateAdditionalHeroes($heroes, $game, $mainHero)
     {
         foreach (['additional_hero_played_1', 'additional_hero_played_2'] as $additionalHeroField) {
@@ -185,34 +204,31 @@ class Game extends Model
         $this->round_wins = $wins;
         $this->round_losses = $losses;
     }
+
+    //if map saved with id, assign name
     public function assignMapIdByName($mapName)
     {
-        // Check if the map ID is already assigned
         if (!$this->map_played_id) {
-            // Find the map with the given name
             $map = OverwatchMap::where('name', $mapName)->first();
 
             if (!$map) {
                 throw new Exception("The selected map '{$mapName}' was not found.");
             }
 
-            // Assign the map ID to the game model
             $this->map_played_id = $map->id;
         }
     }
 
+    //if map saved with name, assign id
     public function assignMapNameById($mapId)
     {
-        // Check if the map name is already assigned
         if (!$this->map_played) {
-            // Find the map by ID
             $map = OverwatchMap::find($mapId);
 
             if (!$map) {
                 throw new Exception("The selected map with ID '{$mapId}' was not found.");
             }
 
-            // Assign the map name to the game model
             $this->map_played = $map->name;
         }
     }
