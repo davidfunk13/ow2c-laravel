@@ -21,14 +21,14 @@ class GameSeeder extends Seeder
             return;
         }
 
-        $numberOfGames = 100;
+        $numberOfGames = 250;
 
         Game::factory()
         ->count($numberOfGames)
         ->create(['user_id' => $user->id]);
 
 
-        $this->command->info("Seeded {$numberOfGames} games for user {$user->id}");
+        $this->command->info("Seeded {$numberOfGames} mixed Quick Play and Competitive games for user {$user->name} sub: {$user->sub}");
     }
 
 }
