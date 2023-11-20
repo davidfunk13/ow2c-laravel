@@ -17,6 +17,7 @@ return [
         'client_id' => env('BATTLE_NET_CLIENT_ID'),
         'client_secret' => env('BATTLE_NET_CLIENT_SECRET'),
         'redirect' => env('BATTLE_NET_REDIRECT_URI'),
+        'callback_fe_uri' => env('CALLBACK_URL', 'http://localhost:3000/callback'),
     ],
 
     'mailgun' => [

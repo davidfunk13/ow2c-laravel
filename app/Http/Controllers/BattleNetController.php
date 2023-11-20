@@ -6,6 +6,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
 
 class BattleNetController extends Controller
@@ -26,7 +27,9 @@ class BattleNetController extends Controller
 
             session()->regenerate();
 
-            return redirect('http://localhost:3000/callback');
+            $battleNetCallbackFeUri = config('services.battle_net.callback_fe_uri');
+
+            return redirect($battleNetCallbackFeUri);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
