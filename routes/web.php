@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-$middleware = ['web', 'auth:web'];
+$middleware = ['auth:sanctum'];
 
 // Auth
 Route::namespace('Battlenet')->prefix('battlenet')->group(function () {
@@ -35,19 +35,3 @@ Route::middleware($middleware)->post('/logout', LogoutController::class)->name('
 
 // Unauthorized
 Route::get('/unauthorized', [UnauthorizedController::class, '__invoke'])->name('unauthorized');
-
-Route::middleware($middleware)->prefix('api')->group(function () {
-    // User
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
-
-    // Games
-    Route::prefix('games')->group(function () {
-        Route::get('/', [IndexController::class, '__invoke'])->name('api.games.index');
-        Route::get('/{gameId}', [ShowController::class, '__invoke'])->name('api.games.show');
-        Route::post('/', [StoreController::class, '__invoke'])->name('api.games.store');
-        Route::put('/{gameId}', [UpdateController::class, '__invoke'])->name('api.games.update');
-        Route::delete('/{gameId}', [DestroyController::class, '__invoke'])->name('api.games.destroy');
-    });
-});

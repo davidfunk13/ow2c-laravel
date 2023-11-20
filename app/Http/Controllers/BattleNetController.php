@@ -24,6 +24,8 @@ class BattleNetController extends Controller
 
             Auth::login($user);
 
+            session()->regenerate();
+
             return redirect('http://localhost:3000/callback');
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
