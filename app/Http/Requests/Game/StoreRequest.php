@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests\Game;
 
-use AdditionalHeroValidationRule;
+use App\Rules\AdditionalHeroValidationRule;
+use App\Rules\MapSectionsValidRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use MapSectionsValidRule;
 
 class StoreRequest extends FormRequest
 {
@@ -27,6 +27,14 @@ class StoreRequest extends FormRequest
             'additional_hero_played_1' => ['nullable', 'string', 'max:255', Rule::exists('overwatch_heroes', 'name')],
             'additional_hero_played_2' => ['nullable', 'string', 'max:255', new AdditionalHeroValidationRule()],
         ];
+    }
+
+    protected function withValidator($validator)
+    {
+        $validator->sometimes(['map_section_1','map_section_2','map_section_3'], ['string', 'max:255', new MapSectionsValidRule()], function ($input) {
+            // Check if the map type is "Control" to apply the validation rule
+            return $input->map_played === 'Control';
+        });
     }
     public function messages()
     {
