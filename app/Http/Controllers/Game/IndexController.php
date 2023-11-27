@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Game;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\GameResource;
 use App\Http\Traits\ServerErrorResponseTrait;
+use App\Models\Game;
 use App\Repositories\Game\GameRepository;
 
 class IndexController extends Controller
@@ -20,7 +21,8 @@ class IndexController extends Controller
 
     public function __invoke()
     {
-        $this->authorize('index');
+        $game = new Game();
+        $this->authorize('index', $game);
 
         try {
             $games = $this->gameRepository->getAll();

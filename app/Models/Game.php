@@ -35,8 +35,8 @@ class Game extends Model
     ];
 
     // Result constants
-    const RESULT_WIN = 0;
-    const RESULT_LOSS = 1;
+    const RESULT_WIN = 1;
+    const RESULT_LOSS = 0;
     const RESULT_DRAW = 2;
 
     // Relationships
@@ -62,9 +62,8 @@ class Game extends Model
             // Load the map and hero details
             $maps = self::loadMaps();
             $heroes = self::loadHeroes();
-
             // Validate the selected map
-            $currentMap = self::getCurrentMap($maps, $game->map_played);
+            $currentMap = self::getCurrentMap($game->map_played, $game->map_played_id);
 
             // Validate map sections
             self::validateMapSections($currentMap, $game);
@@ -72,18 +71,20 @@ class Game extends Model
             // Validate the main hero
             $mainHero = self::validateMainHeroName($heroes, $game->hero_played);
 
+            //set the game's role from the hero
+            $game->game_role = $mainHero['type'];
+
             // Validate additional heroes' types to match the main hero's type
             self::validateAdditionalHeroes($heroes, $game, $mainHero);
 
             // Set the game type based on the map
             self::setGameType($game, $currentMap);
-
             // Update round wins and losses
             $game->updateRoundWinsAndLosses();
 
             // Assign map relationships
-            $game->assignMapIdByName($currentMap);
-            $game->assignMapNameById($currentMap);
+            $game->assignMapIdByName($currentMap->name);
+            $game->assignMapNameById($currentMap->id);
 
             $game->assignLoggedInUserId();
         });
@@ -134,16 +135,27 @@ class Game extends Model
     }
 
     // Get the current map by name
-    private static function getCurrentMap($maps, $mapName)
+
+    private static function getCurrentMap($mapName = null, $mapId = null)
     {
-        $currentMap = collect($maps)->firstWhere('name', $mapName);
+        if (!$mapName && !$mapId) {
+            throw new Exception("Either map name or map ID must be provided.");
+        }
+
+        if ($mapId) {
+            $currentMap = OverwatchMap::find($mapId);
+        } else {
+            $currentMap = OverwatchMap::where('name', $mapName)->first();
+        }
 
         if (!$currentMap) {
-            throw new Exception("The selected map '{$mapName}' was not found.");
+            throw new Exception("The selected map with name '{$mapName}' or ID '{$mapId}' was not found.");
         }
 
         return $currentMap;
     }
+
+
 
     // Validate map sections
     private static function validateMapSections($currentMap, $game)
@@ -184,7 +196,7 @@ class Game extends Model
     // Set game type based on the map
     private static function setGameType($game, $currentMap)
     {
-        $game->game_type = $currentMap['type'];
+        $game->game_type = $currentMap->type;
     }
 
     // Update round wins and losses based on round outcomes
@@ -208,7 +220,6 @@ class Game extends Model
     //if map saved with id, assign name
     public function assignMapIdByName($mapName)
     {
-        if (!$this->map_played_id) {
             $map = OverwatchMap::where('name', $mapName)->first();
 
             if (!$map) {
@@ -216,7 +227,6 @@ class Game extends Model
             }
 
             $this->map_played_id = $map->id;
-        }
     }
 
     //if map saved with name, assign id

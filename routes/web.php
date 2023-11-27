@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-$middleware = ['auth:sanctum'];
+$middleware = ['web'];
 
 // Auth
 Route::namespace('Battlenet')->prefix('battlenet')->group(function () {
@@ -30,8 +30,6 @@ Route::namespace('Battlenet')->prefix('battlenet')->group(function () {
     Route::get('callback', [BattleNetController::class, 'handleProviderCallback'])->name('battlenet-provider-callback');
 });
 
-// Logout
-Route::middleware($middleware)->post('/logout', LogoutController::class)->name('logout');
 
 // Unauthorized
 Route::get('/unauthorized', [UnauthorizedController::class, '__invoke'])->name('unauthorized');
