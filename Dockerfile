@@ -22,7 +22,7 @@ COPY .docker/php/fpm.conf /usr/local/etc/php-fpm.d/www.conf
 # Copy Nginx configuration
 COPY .docker/nginx/default.conf /etc/nginx/sites-available/default
 
-# Copy application code and built dependencies from the builder stage
+# Copy application code and built dependencies
 COPY --from=builder /app /var/www/overwatch-2-companion-api
 WORKDIR /var/www/overwatch-2-companion-api
 
