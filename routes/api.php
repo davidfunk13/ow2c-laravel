@@ -9,11 +9,13 @@
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
 use App\Http\Controllers\Game\DestroyController;
 use App\Http\Controllers\Game\IndexController;
 use App\Http\Controllers\Game\ShowController;
 use App\Http\Controllers\Game\StoreController;
 use App\Http\Controllers\Game\UpdateController;
+use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\UnauthorizedController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -21,9 +23,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/unauthorized', [UnauthorizedController::class, '__invoke'])->name('unauthorized');
 
-$middleware = ['auth:sanctum'];
+$middleware = ['api'];
 
 Route::middleware($middleware)->group(function () {
+    // Logout
+    Route::post('/logout', LogoutController::class)->name('logout');
+
+    Route::get('/auth/check', function () {
+        return response()->json(['authenticated' => true]);
+    });
     // User
     Route::get('/user', function (Request $request) {
         Log::info('Token from cookie: ' . $request->cookie('token'));

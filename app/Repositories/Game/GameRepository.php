@@ -27,9 +27,9 @@ class GameRepository extends BaseRepository
         return $game;
     }
 
-    public function update(Game $game, array $data): Game
+    public function update(Game $game, array $options): Game
     {
-        $this->setFields($game, $data);
+        $this->setFields($game, $options);
         $game->save();
 
         return $game;
@@ -42,21 +42,23 @@ class GameRepository extends BaseRepository
 
     protected function setFields(Game &$game, array $options): void
     {
-        $game->user_id = $options['user']['id'];
+        $game->user_id = $options['user']['id'] ?? null;
         $game->result = $options['result'];
-        $game->map_played = $options['map_played'];
-
-        // Setting optional map sections if provided
+        $game->game_role = $options['game_role'] ?? null;
+        $game->game_mode = $options['game_mode'] ?? null;
+        $game->game_type = $options['game_type'] ?? null;
+        $game->hero_played = $options['hero_played'];
+        $game->map_played = $options['map_played'] ?? null;
+        $game->map_played_id = $options['map_played_id'] ?? null;
+        // $game->round_losses = $options['round_losses'] ?? 0;
+        $game->round_1_outcome = $options['round_1_outcome'] ?? null;
+        $game->round_2_outcome = $options['round_2_outcome'] ?? null;
+        $game->round_3_outcome = $options['round_3_outcome'] ?? null;
+        // $game->round_wins = $options['round_wins'] ?? 0;
         $game->map_section_1 = $options['map_section_1'] ?? null;
         $game->map_section_2 = $options['map_section_2'] ?? null;
         $game->map_section_3 = $options['map_section_3'] ?? null;
-
-        // Hero Played
-        $game->hero_played = $options['hero_played'];
-
-        // Optional additional hero played columns
         $game->additional_hero_played_1 = $options['additional_hero_played_1'] ?? null;
         $game->additional_hero_played_2 = $options['additional_hero_played_2'] ?? null;
     }
-
 }

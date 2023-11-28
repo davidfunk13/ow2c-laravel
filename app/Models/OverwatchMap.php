@@ -33,4 +33,9 @@ class OverwatchMap extends Model
     {
         return $this->hasMany(Game::class, 'map_played_id');
     }
+    public function hasSections()
+    {
+        // Replace 'Control' with whatever condition determines if a map has sections
+        return $this->type === 'Control';
+    }
 }

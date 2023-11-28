@@ -8,6 +8,7 @@ use App\Http\Resources\GameResource;
 use App\Http\Traits\ServerErrorResponseTrait;
 use App\Models\Game;
 use App\Repositories\Game\GameRepository;
+
 class StoreController extends Controller
 {
     use ServerErrorResponseTrait;
