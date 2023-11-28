@@ -22,12 +22,12 @@ COPY .docker/php/fpm.conf /usr/local/etc/php-fpm.d/www.conf
 # Copy Nginx configuration
 COPY .docker/nginx/default.conf /etc/nginx/sites-available/default
 
-# Copy application code and built dependencies
-COPY --from=builder /app /var/www/html
-WORKDIR /var/www/html
+# Copy application code and built dependencies from the builder stage
+COPY --from=builder /app /var/www/overwatch-2-companion-api
+WORKDIR /var/www/overwatch-2-companion-api
 
 # Set correct permissions
-RUN chown -R www-data:www-data /var/www/html
+RUN chown -R www-data:www-data /var/www/overwatch-2-companion-api
 
 # Expose port 80 for Nginx
 EXPOSE 80
