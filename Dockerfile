@@ -19,6 +19,7 @@ WORKDIR /var/www/overwatch-2-companion-api
 
 # Set correct permissions
 RUN chown -R www-data:www-data /var/www/overwatch-2-companion-api
+RUN chown -R www-data:www-data /var/www/overwatch-2-companion-api/storage /var/www/overwatch-2-companion-api/bootstrap/cache
 
 # Expose the default PHP-FPM port (9000)
 EXPOSE 9000
