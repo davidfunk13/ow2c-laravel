@@ -20,7 +20,7 @@ services:
       - meilisearch
 
   mysql:
-    image: 'mysql/mysql-server:8.0'
+    image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: ${DB_DATABASE}
@@ -30,14 +30,6 @@ services:
       - mysql_data:/var/lib/mysql
     networks:
       - app_network
-    healthcheck:
-      test:
-        - CMD
-        - mysqladmin
-        - ping
-        - '-p${DB_PASSWORD}'
-      retries: 3
-      timeout: 5s
 
   redis:
     image: redis:alpine
@@ -50,22 +42,15 @@ services:
         - CMD
         - redis-cli
         - ping
-
+      retries: 3
+      timeout: 5s
   meilisearch:
     image: getmeili/meilisearch:latest
     volumes:
       - meilisearch_data:/data.ms
     networks:
       - app_network
-    healthcheck:
-      test:
-        - CMD
-        - wget
-        - '--no-verbose'
-        - '--spider'
-        - 'http://localhost:7700/health'
-      retries: 3
-      timeout: 5s
+
 networks:
   app_network:
     driver: bridge
