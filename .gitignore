@@ -22,7 +22,6 @@ Homestead.json
 /.vagrant
 .phpunit.result.cache
 
-
 /.phpunit.cache
 /node_modules
 /public/build
@@ -36,3 +35,6 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+
+#nginx config i keep a copy of locally.
+nginx.conf
