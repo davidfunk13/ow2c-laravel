@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  laravel_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: overwatch-2-companion-api
+    volumes:
+      - ./storage:/var/www/overwatch-2-companion-api/storage
+      - ./public:/var/www/overwatch-2-companion-api/public
+    networks:
+      - app_network
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app_network
+
+  redis:
+    image: redis:alpine
+    volumes:
+      - redis_data:/data
+    networks:
+      - app_network
+
+  meilisearch:
+    image: getmeili/meilisearch:latest
+    volumes:
+      - meilisearch_data:/data.ms
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  redis_data:
+  meilisearch_data:
