@@ -28,8 +28,6 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD}
     volumes:
       - mysql_data:/var/lib/mysql
-    ports:
-      - '7700'
     networks:
       - app_network
     healthcheck:
@@ -45,8 +43,6 @@ services:
     image: redis:alpine
     volumes:
       - redis_data:/data
-    ports:
-      - '7700'
     networks:
       - app_network
     healthcheck:
