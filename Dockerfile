@@ -19,20 +19,17 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     git \
-    curl
+    curl \
+    libzip-dev # Add libzip-dev here
 
 # Clear out the local repository of retrieved package files
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
-RUN docker-php-ext-install pdo pdo_mysql
-RUN docker-php-ext-install gd mbstring exif pcntl bcmath zip
+RUN docker-php-ext-install pdo pdo_mysql gd mbstring exif pcntl bcmath zip
 
 # Install Redis extension
 RUN pecl install redis && docker-php-ext-enable redis
-
-# Install and enable Xdebug (if required, uncomment the following lines)
-# RUN pecl install xdebug && docker-php-ext-enable xdebug
 
 # Copy application code and built dependencies
 COPY --from=builder /app /var/www/overwatch-2-companion-api
