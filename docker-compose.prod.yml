@@ -10,7 +10,8 @@ services:
       - ./storage:/var/www/overwatch-2-companion-api/storage
       - ./public:/var/www/overwatch-2-companion-api/public
       - /var/www/overwatch-2-companion-api/.env:/var/www/overwatch-2-companion-api/.env
-
+    ports:
+      - "8080:9000"
     networks:
       - app_network
 
