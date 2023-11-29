@@ -36,7 +36,7 @@ Route::middleware($middleware)->group(function () {
     Route::get('/user', function (Request $request) {
         Log::info('Token from cookie: ' . $request->cookie('token'));
 
-        return $request->user();
+        return  response()->json($request->user());
     });
 
     // Games
