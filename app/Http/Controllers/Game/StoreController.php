@@ -19,7 +19,7 @@ class StoreController extends Controller
     }
     public function __invoke(StoreRequest $request)
     {
-        $this->authorize('create', Game::class);
+        // $this->authorize('create', Game::class);
 
         try {
             $game = $this->gameRepository->save($request->all());
