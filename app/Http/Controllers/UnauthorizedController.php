@@ -12,7 +12,6 @@ class UnauthorizedController extends Controller
         $message = [
             'message' => 'Unauthorized'
         ];
-
         return response()->json($message, JsonResponse::HTTP_UNAUTHORIZED);
     }
 }

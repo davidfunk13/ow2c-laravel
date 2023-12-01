@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/unauthorized', [UnauthorizedController::class, '__invoke'])->name('unauthorized');
 
-$middleware = ['api'];
+$middleware = ['auth:sanctum'];
 
 Route::middleware($middleware)->group(function () {
     // Logout
