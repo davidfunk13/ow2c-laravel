@@ -38,3 +38,4 @@ yarn-error.log
 
 #nginx config i keep a copy of locally.
 nginx.conf
+.prod.env
