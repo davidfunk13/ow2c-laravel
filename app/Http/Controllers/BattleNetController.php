@@ -13,6 +13,8 @@ class BattleNetController extends Controller
 {
     public function redirectToProvider()
     {
+        Log::info("hit");
+
         return Socialite::driver('battle_net')->redirect();
     }
 
@@ -22,7 +24,6 @@ class BattleNetController extends Controller
             $socialiteUser = Socialite::driver('battle_net')->user();
 
             $user = User::firstOrCreate(['sub' => $socialiteUser->attributes['sub']], ['name' => $socialiteUser->attributes['name']]);
-
             Auth::login($user);
 
             session()->regenerate();

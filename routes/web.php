@@ -1,14 +1,7 @@
 <?php
 
 use App\Http\Controllers\BattleNetController;
-use App\Http\Controllers\Game\DestroyController;
-use App\Http\Controllers\Game\IndexController;
-use App\Http\Controllers\Game\ShowController;
-use App\Http\Controllers\Game\StoreController;
-use App\Http\Controllers\Game\UpdateController;
-use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\UnauthorizedController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,8 +14,6 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-$middleware = ['web'];
 
 // Auth
 Route::namespace('Battlenet')->prefix('battlenet')->group(function () {

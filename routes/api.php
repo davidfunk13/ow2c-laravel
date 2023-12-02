@@ -32,10 +32,9 @@ Route::middleware($middleware)->group(function () {
     Route::get('/auth/check', function () {
         return response()->json(['authenticated' => true]);
     });
+
     // User
     Route::get('/user', function (Request $request) {
-        Log::info('Token from cookie: ' . $request->cookie('token'));
-
         return  response()->json($request->user());
     });
 
