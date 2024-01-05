@@ -1,4 +1,4 @@
-name: Deploy Laravel Application
+name: Deploy to VPS
 
 on:
   push:
@@ -8,16 +8,17 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout
+    - name: Checkout code
       uses: actions/checkout@v2
 
     - name: Set up SSH
-      uses: webfactory/ssh-agent@v0.5.2
-      with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-    - name: Deploy to Vultr VPS
       run: |
-        ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} 'bash -s' < ./deploy.sh
+        mkdir -p ~/.ssh
+        echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Deploy to VPS
+      run: ssh -o "StrictHostKeyChecking=no" ${{ secrets.USER }}@${{ secrets.VPS_IP }} 'bash -s' < ~/scripts/deploy.sh
