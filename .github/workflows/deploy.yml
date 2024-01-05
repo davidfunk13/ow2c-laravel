@@ -22,6 +22,4 @@ jobs:
 
     - name: Deploy to VPS
       run: |
-        ssh -o "StrictHostKeyChecking=no" ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} 'ls -l'
-
-      # run: ssh -o "StrictHostKeyChecking=no" ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} 'bash -s'/ < ~/scripts/deploy.sh
+        ssh -o "StrictHostKeyChecking=no" ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} 'bash -s'/ < ~/scripts/deploy.sh
