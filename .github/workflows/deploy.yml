@@ -20,6 +20,6 @@ jobs:
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
-    - name: Deploy to VPS
+    - name: Navigate to the Scripts Directory and Run deploy.sh
       run: |
-          ssh -o "StrictHostKeyChecking=no" ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} 'cd ~/scripts && ls -l'
+        ssh -o "StrictHostKeyChecking=no" ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} 'cd ~/scripts && bash -c "./deploy.sh"; if [ $? -eq 0 ]; then echo "Script executed successfully"; else echo "Script execution failed"; fi'
