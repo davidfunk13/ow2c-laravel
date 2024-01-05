@@ -22,8 +22,8 @@ jobs:
 
     - name: Deploy to VPS
       run: |
-        echo "VPS_USER: ${#{{ secrets.VPS_USER }}} characters"
-        echo "VPS_HOST: ${#{{ secrets.VPS_HOST }}} characters"
-        echo "SSH_PRIVATE_KEY: ${#{{ secrets.SSH_PRIVATE_KEY }}} characters"
+        echo "VPS_USER: ${{ secrets.VPS_USER }} characters"
+        echo "VPS_HOST: ${{ secrets.VPS_HOST }} characters"
+        echo "SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }} characters"
 
       # run: ssh -o "StrictHostKeyChecking=no" ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} 'bash -s' < ~/scripts/deploy.sh
