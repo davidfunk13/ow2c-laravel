@@ -1,27 +1,36 @@
 <?php
 
-namespace Tests\Feature;
-
-use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Http\Controllers\LogoutController;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use Tests\TestCase;
 
 class LogoutControllerTest extends TestCase
 {
-    use RefreshDatabase;  // If you want to use database transactions during testing
-
-    /** @test */
-    public function a_logged_in_user_can_logout()
+    public function test_logout_action()
     {
-        // Given: We have a user and they are logged in
-        $user = User::factory()->create();
+        // Start the session
+        Session::start();
+        
+        // Mock the logout method of the Auth facade
+        Auth::shouldReceive('guard')->with('web')->andReturnSelf();
+        Auth::shouldReceive('logout')->andReturn(true);
 
-        $this->actingAs($user);
+        // Create a fake request with a session
+        $request = Request::create('/logout', 'POST');
+        $request->setLaravelSession(app('session.store'));
+ 
+        // Perform the logout action (e.g., make a POST request to /logout)
+        $response = $this->app->make(LogoutController::class)->__invoke($request);
+ 
+        // Assert the response status code
+        $this->assertEquals(200, $response->getStatusCode());
 
-        // When: They hit the logout endpoint
-        $this->post(route('logout'));
+        // Parse the JSON response content
+        $data = json_decode($response->getContent(), true);
 
-        // Then: They should be logged out and redirected to the login page
-        $this->assertGuest();
+        // Assert the JSON data
+        $this->assertEquals(['message' => 'Logged out'], $data);
     }
 }

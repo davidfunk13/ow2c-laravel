@@ -27,8 +27,11 @@ $middleware = ['auth:sanctum'];
 
 Route::middleware($middleware)->group(function () {
     // Logout
-    Route::post('/logout', LogoutController::class)->name('logout');
-
+    Route::post('/logout', function (\Illuminate\Http\Request $request) {
+        dd($request->session()->all()); // Dump session data
+        return app(\App\Http\Controllers\LogoutController::class)($request);
+    })->name('logout');
+    
     Route::get('/auth/check', function () {
         return response()->json(['authenticated' => true]);
     });
