@@ -21,5 +21,4 @@ jobs:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
     - name: Deploy to VPS
-      run: ls -l ~/scripts/
-      # run: ssh -o "StrictHostKeyChecking=no" ${{ secrets.USER }}@${{ secrets.VPS_IP }} 'bash -s' < ~/scripts/deploy.sh
+      run: ssh -o "StrictHostKeyChecking=no" ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} 'bash -s' < ~/scripts/deploy.sh
