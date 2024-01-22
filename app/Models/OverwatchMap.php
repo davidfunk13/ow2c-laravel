@@ -8,7 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class OverwatchMap extends Model
 {
     use HasFactory;
-
+    const CONTROL = "Control";
+    const ESCORT = "Escort";
+    const PUSH = "Push";
+    const HYBRID = "Hybrid";
+    const FLASHPOINT = "Flashpoint";
     protected $fillable = [
         'name',
         'type',
@@ -17,18 +21,14 @@ class OverwatchMap extends Model
         'area_3',
         'country',
     ];
-    public function gamesOnMapForCurrentUser()
-    {
-        return $this->games()
-            ->where('user_id', auth()->id())
-            ->get();
-    }
-
     public function game()
     {
         return $this->hasOne(Game::class);
     }
-
+    public function getType(string $type)
+    {
+        return $this->where('type', $type)->get();
+    }
     public function games()
     {
         return $this->hasMany(Game::class, 'map_played_id');
