@@ -17,13 +17,13 @@ class IndexController extends Controller
     {
         $this->mapRepository = $mapRepository;
     }
-    
+
     public function __invoke()
     {
         try {
             $maps = $this->mapRepository->getAll();
         } catch (\Throwable $exception) {
-            return $this->internalServerError('Maps could not be retrieved');
+            return response()->json(['message' => 'Maps could not be retrieved', $exception->getMessage()], 500);
         }
 
         return OverwatchMapResource::collection($maps);
