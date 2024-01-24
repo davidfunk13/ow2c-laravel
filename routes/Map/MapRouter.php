@@ -11,7 +11,7 @@ class MapRouter
     {
         Route::middleware(['auth:sanctum'])->group(function () {
             Route::prefix('maps')->group(function () {
-                Route::get('/', [IndexController::class, '__invoke'])->name('api.maps.index');
+                Route::get('/{gameType?}', [IndexController::class, '__invoke'])->name('api.maps.index');
             });
         });
     }
