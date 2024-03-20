@@ -52,7 +52,6 @@ return [
         'area_3' => 'Sublevel',
         'country' => 'Antarctica',
     ],
-
     // Escort Maps
     [
         'name' => 'Circuit Royal',

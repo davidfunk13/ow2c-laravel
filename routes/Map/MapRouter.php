@@ -2,8 +2,8 @@
 
 namespace Routes\Map;
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Map\IndexController;
+use Illuminate\Support\Facades\Route;
 
 class MapRouter
 {
@@ -11,7 +11,7 @@ class MapRouter
     {
         Route::middleware(['auth:sanctum'])->group(function () {
             Route::prefix('maps')->group(function () {
-                Route::get('/', [IndexController::class, 'index'])->name('api.maps.index');
+                Route::get('/{gameType?}', [IndexController::class, '__invoke'])->name('api.maps.index');
             });
         });
     }
