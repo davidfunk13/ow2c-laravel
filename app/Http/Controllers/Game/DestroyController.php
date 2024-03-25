@@ -20,6 +20,7 @@ class DestroyController extends Controller
     public function __invoke($gameId) // Replace with your actual route parameter name
     {
         $this->authorize('destroy', $gameId);
+        
 
         try {
             $this->gameRepository->destroy($gameId);
