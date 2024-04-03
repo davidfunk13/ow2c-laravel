@@ -24,7 +24,9 @@ class StoreController extends Controller
         try {
             $game = $this->gameRepository->save($request->all());
         } catch (\Throwable $exception) {
-            return $this->internalServerError('Game could not be created');
+
+            $message = $exception->getMessage();
+            return $this->internalServerError("Game could not be created, $message");
         }
 
         return new GameResource($game);

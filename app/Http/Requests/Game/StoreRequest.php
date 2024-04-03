@@ -13,19 +13,33 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'map_played_id' => 'required_without:map_played|exists:overwatch_maps,id',
-            'result' => 'required|integer|in:0,1,2',
-            'game_mode' => 'required|integer|in:0,1',
+            'map_played_id' => [
+                'required_without:map_played',
+                'integer',
+                Rule::exists('overwatch_maps', 'id')
+            ],
             'map_played' => [
                 'required_without:map_played_id',
                 'string',
                 'max:255',
                 Rule::exists('overwatch_maps', 'name'),
             ],
+            'result' => 'required|integer|in:0,1,2',
+            'game_mode' => 'required|integer|in:0,1',
             'map_section_1' => 'nullable|string|max:255',
             'map_section_2' => 'nullable|string|max:255',
             'map_section_3' => 'nullable|string|max:255',
-            'hero_played' => ['required', 'string', 'max:255',  Rule::exists('overwatch_heroes', 'name')],
+            'hero_played' => [
+                'required_without:hero_played_id',
+                'string',
+                'max:255',
+                Rule::exists('overwatch_heroes', 'name'),
+            ],
+            'hero_played_id' => [
+                'required_without:hero_played',
+                'integer',
+                Rule::exists('overwatch_heroes', 'id'),
+            ],
             'additional_hero_played_1' => ['nullable', 'string', 'max:255', Rule::exists('overwatch_heroes', 'name')],
             'additional_hero_played_2' => ['nullable', 'string', 'max:255', new AdditionalHeroValidationRule()],
         ];

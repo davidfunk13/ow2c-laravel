@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use App\Socialite\BattleNetProvider;
 use Laravel\Socialite\Two\User as SocialiteUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
@@ -22,18 +23,24 @@ class AuthorizationFlowTest extends TestCase
     {
         parent::setUp();
 
+
+        if (!env('DEV_BATTLETAG') || !env('DEV_BATTLETAG_SUB')) {
+            $this->fail("DEV_BATTLETAG and DEV_BATTLETAG_SUB must be set in your .env file to run this test.\n");
+            return;
+        }
+
         Http::fake([
             'battle.net/oauth/authorize' => Http::response([], 200),
             'battle.net/oauth/token' => Http::response([
                 "token_type" => "bearer",
                 "expires_in" => 86399,
                 "access_token" => "USVpe3EizBul8AM6miqEmDVaR8q1PdWwio",
-                "sub" => "388652712",
+                "sub" => env('DEV_BATTLETAG_SUB'),
             ], 200),
             'battle.net/oauth/userinfo' => Http::response([
-                'sub' => '388652712',
-                'id' => 388652712,
-                'battletag' => 'BathtubFarts#1297',
+                'sub' => env('DEV_BATTLETAG_SUB'),
+                'id' => env('DEV_BATTLETAG_SUB'),
+                'battletag' => env('DEV_BATTLETAG'),
             ], 200),
         ]);
     }
@@ -42,21 +49,21 @@ class AuthorizationFlowTest extends TestCase
     public function test_successful_oauth_flow_user_creation_and_authorization()
     {
         $mockedUser = new SocialiteUser();
-        $mockedUser->id = 388652712;
+        $mockedUser->id = env('DEV_BATTLETAG_SUB');
         $mockedUser->nickname = null;
-        $mockedUser->name = "BathtubFarts#1297";
+        $mockedUser->name = env('DEV_BATTLETAG');
         $mockedUser->email = null;
         $mockedUser->avatar = null;
         $mockedUser->user = [
-            "sub" => "388652712",
-            "id" => 388652712,
-            "battletag" => "BathtubFarts#1297",
+            "sub" => "env('DEV_BATTLETAG_SUB')",
+            "id" => env('DEV_BATTLETAG_SUB'),
+            "battletag" => env('DEV_BATTLETAG')
         ];
 
         $mockedUser->attributes = [
-            "id" => 388652712,
-            "name" => "BathtubFarts#1297",
-            "sub" => 388652712,
+            "id" => env('DEV_BATTLETAG_SUB'),
+            "name" => env('DEV_BATTLETAG'),
+            "sub" => env('DEV_BATTLETAG_SUB'),
         ];
 
         $mockedProvider = Mockery::mock(BattleNetProvider::class)->makePartial();
@@ -71,8 +78,8 @@ class AuthorizationFlowTest extends TestCase
         $response->assertRedirect('http://localhost:3000/callback');
 
         $this->assertDatabaseHas('users', [
-            'sub' => '388652712',
-            'name' => 'BathtubFarts#1297',
+            'sub' => env('DEV_BATTLETAG_SUB'),
+            'name' => env('DEV_BATTLETAG'),
         ]);
 
         $authenticatedUser = User::where('sub', $mockedUser->attributes['sub'])->first();
