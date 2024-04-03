@@ -22,11 +22,14 @@ class StoreController extends Controller
         // $this->authorize('create', Game::class);
 
         try {
+
+            $request->merge(['user_id' => auth()->id()]);
             $game = $this->gameRepository->save($request->all());
         } catch (\Throwable $exception) {
 
             $message = $exception->getMessage();
-            return $this->internalServerError("Game could not be created, $message");
+            $user = auth()->user();
+            return $this->internalServerError("Game could not be created, $message, $user");
         }
 
         return new GameResource($game);
