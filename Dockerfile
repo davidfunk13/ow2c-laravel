@@ -7,9 +7,8 @@ COPY . /app
 # Install Composer dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Stage 2: Set up the production environment with a stable Debian version
+# Stage 2: Set up the production environment
 FROM php:8.1-fpm-buster
-
 # Install system dependencies for PHP extensions
 RUN apt-get update && apt-get install -y \
     libpq-dev \
@@ -20,7 +19,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     curl \
-    libzip-dev
+    libzip-dev # Add libzip-dev here
 
 # Clear out the local repository of retrieved package files
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
