@@ -7,19 +7,11 @@ COPY . /app
 # Install Composer dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Stage 2: Set up the production environment
-FROM php:8.1-fpm
-
-# Install gnupg and update keys if necessary
-RUN apt-get update && apt-get install -y gnupg
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys [KEY_ID]
-
-# Modify the sources list if necessary and update the system
-RUN sed -i 's/http:\/\/deb.debian.org\/debian/http:\/\/ftp.de.debian.org\/debian/' /etc/apt/sources.list
-RUN apt-get update -o Debug::Acquire::gpgv=true
+# Stage 2: Set up the production environment with a stable Debian version
+FROM php:8.1-fpm-buster
 
 # Install system dependencies for PHP extensions
-RUN apt-get install -y \
+RUN apt-get update && apt-get install -y \
     libpq-dev \
     libpng-dev \
     libonig-dev \
@@ -28,7 +20,7 @@ RUN apt-get install -y \
     unzip \
     git \
     curl \
-    libzip-dev # Add libzip-dev here
+    libzip-dev
 
 # Clear out the local repository of retrieved package files
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
