@@ -1,6 +1,7 @@
 <?php
 use Routes\Auth\AuthRouter;
 use Routes\Game\GameRouter;
+use Routes\Hero\HeroRouter;
 use Routes\Map\MapRouter;
 
 /*
@@ -16,4 +17,5 @@ use Routes\Map\MapRouter;
 
 (new AuthRouter())();
 (new GameRouter())();
+(new HeroRouter())();
 (new MapRouter())();

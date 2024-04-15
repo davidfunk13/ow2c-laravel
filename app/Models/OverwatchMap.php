@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class OverwatchMap extends Model
 {
@@ -21,6 +23,16 @@ class OverwatchMap extends Model
         'area_3',
         'country',
     ];
+
+    protected $appends =["thumbnail_url"];
+
+    public function getThumbnailUrlAttribute()
+    {
+        $imageName = Str::slug($this->name, '_').'.webp';
+
+        return Storage::disk('public')->url("maps/{$imageName}");
+    }
+    
     public function game()
     {
         return $this->hasOne(Game::class);
@@ -35,7 +47,8 @@ class OverwatchMap extends Model
     }
     public function hasSections()
     {
-        // Replace 'Control' with whatever condition determines if a map has sections
+        // TODO: Replace 'Control' with whatever condition determines if a map has sections
+        
         return $this->type === 'Control';
     }
 }
