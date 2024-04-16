@@ -11,7 +11,7 @@ class HeroRouter
     {
         Route::middleware(['auth:sanctum'])->group(function () {
             Route::prefix('heroes')->group(function () {
-                Route::get('/{heroType?}', [IndexController::class, '__invoke'])->name('api.heroes.index');
+                Route::get('/{type?}', [IndexController::class, '__invoke'])->name('api.heroes.index');
             });
         });
     }

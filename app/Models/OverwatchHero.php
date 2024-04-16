@@ -11,10 +11,7 @@ class OverwatchHero extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'name',
-        'type',
-    ];
+    protected $fillable = [];
     protected $appends = ["thumbnail_url"];
 
     public function getThumbnailUrlAttribute()
@@ -23,5 +20,4 @@ class OverwatchHero extends Model
 
         return Storage::disk('public')->url("heroes/{$imageName}");
     }
-
 }

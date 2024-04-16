@@ -19,6 +19,7 @@ return new class extends Migration
             $table->id();
             $table->enum('name', $names);
             $table->enum('type', $types);
+            $table->integer('type_id');
             $table->timestamps();
         });
     }

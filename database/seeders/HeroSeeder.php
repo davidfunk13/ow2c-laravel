@@ -21,6 +21,7 @@ class HeroSeeder extends Seeder
             DB::table('overwatch_heroes')->insert([
                 'name' => $hero['name'],
                 'type' => $hero['type'],
+                'type_id' => $hero['type_id'],
                 'created_at' => $currentDateTime,
                 'updated_at' => $currentDateTime
             ]);
