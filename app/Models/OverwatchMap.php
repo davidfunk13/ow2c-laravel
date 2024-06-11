@@ -37,10 +37,6 @@ class OverwatchMap extends Model
     {
         return $this->hasOne(Game::class);
     }
-    public function getType(string $type)
-    {
-        return $this->where('type', $type)->get();
-    }
     public function games()
     {
         return $this->hasMany(Game::class, 'map_played_id');

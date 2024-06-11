@@ -35,6 +35,9 @@ class Game extends Model
     ];
 
     protected $appends = [
+        'map_played_name',
+        'game_mode_name',
+        'hero_played_name',
         'result_string',
         'game_role',
         'game_role_id'
@@ -107,19 +110,30 @@ class Game extends Model
             case self::RESULT_WIN:
                 return 'Win';
             case self::RESULT_LOSS:
-                return "Loss $result";
+                return "Loss";
             case self::RESULT_DRAW:
                 return 'Draw';
             default:
                 throw new Exception("Invalid result '{$result}'");
         }
     }
-    
+
+    public function getMapPlayedNameAttribute()
+    {
+        $map = OverwatchMap::find($this->map_played_id);
+        return $map->name;
+    }
+    public function getHeroPlayedNameAttribute()
+    {
+        $hero = OverwatchHero::find($this->hero_played_id);
+        return $hero->name;
+    }
+
     public function getGameRoleAttribute()
     {
         $hero = OverwatchHero::find($this->hero_played_id);
 
-        switch($hero->type_id){
+        switch ($hero->type_id) {
             case self::ROLE_TANK:
                 return 'Tank';
             case self::ROLE_DAMAGE:
@@ -130,11 +144,17 @@ class Game extends Model
                 throw new Exception("Invalid hero type '{$hero->type_id}'");
         }
     }
+    public function getGameModeNameAttribute()
+    {
+        $map = OverwatchMap::find($this->map_played_id);
+        return $map->type;
+    }
+
     public function getGameRoleIdAttribute()
     {
         $hero = OverwatchHero::find($this->hero_played_id);
 
-        if(!$hero){
+        if (!$hero) {
             return "Something went wrong";
         }
 

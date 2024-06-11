@@ -40,4 +40,13 @@ abstract class BaseRepository
 
         $qb->with($relations);
     }
+
+    protected function handleFilters(Builder $qb, array $filters): void
+    {
+        foreach ($filters as $field => $value) {
+            if (!empty($value)) {
+                $qb->where($field, 'like', "%$value%");
+            }
+        }
+    }
 }

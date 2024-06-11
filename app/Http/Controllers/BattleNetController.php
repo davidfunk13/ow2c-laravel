@@ -29,10 +29,17 @@ class BattleNetController extends Controller
             session()->regenerate();
 
             $battleNetCallbackFeUri = config('services.battle_net.callback_fe_uri');
-
+            Log::info($battleNetCallbackFeUri);
+            Log::info($request->all());
+            Log::info($user->toArray());
+            //attach the user as params to the uri
+            //stringify user object and attach as one param
+            $battleNetCallbackFeUri = $battleNetCallbackFeUri . '?' . http_build_query($user->toArray());
             return redirect($battleNetCallbackFeUri);
+
         } catch (Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 500);
+            Log::error($e->getMessage());
+            return response()->json(['message' => $e->getTraceAsString()], 500);
         }
     }
 }

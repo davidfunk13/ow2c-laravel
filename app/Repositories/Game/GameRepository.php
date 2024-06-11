@@ -3,12 +3,30 @@
 namespace App\Repositories\Game;
 
 use App\Models\Game;
-use App\Models\OverwatchHero;
 use App\Repositories\BaseRepository;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class GameRepository extends BaseRepository
 {
+    public function getAllPaginated(Request $request): LengthAwarePaginator
+    {
+        $query = Game::query();
+
+        // Handle sorting
+        $this->handleSort($query, $request->all());
+
+        // Handle filters
+        $this->handleFilters($query, $request->input('filters', []));
+
+        // Handle relations
+        $this->handleRelations($query, [], $request->all());
+
+        // Return paginated results
+        return $query->paginate($request->input('per_page', 10));
+    }
+
     public function getAll(): Collection
     {
         return Game::all();
